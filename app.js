@@ -2,6 +2,7 @@ var bodyparser = require('body-parser');
 var mongose = require('mongoose');
 var port = process.env.PORT || 4201;
 var express = require('express'); 
+var user_routes = require('./routes/user'); 
 
 var app = express();
 
@@ -23,5 +24,9 @@ mongose.connect('mongodb://localhost:27017/twitterdb', (err)=> {
     }
 }); 
 
+app.use(bodyparser.urlencoded({extended: true})); 
+app.use(bodyparser.json()); 
+
+app.use('/api', user_routes);
 module.exports = app; 
 
