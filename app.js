@@ -3,6 +3,7 @@ var mongose = require('mongoose');
 var port = process.env.PORT || 4201;
 var express = require('express'); 
 var user_routes = require('./routes/user'); 
+var message_routes = require('./routes/message');
 
 var app = express();
 
@@ -28,5 +29,6 @@ app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json()); 
 
 app.use('/api', user_routes);
+app.use('/api', message_routes);
 module.exports = app; 
 

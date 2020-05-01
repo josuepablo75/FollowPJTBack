@@ -7,4 +7,7 @@ app.post('/login', UserController.login);
 app.get('/usuario/:id', UserController.get_user);
 app.get('/usuarios', UserController.get_users);
 app.put('/usuarios/:id', UserController.editar_config);
+
+
+
 module.exports = app; 
