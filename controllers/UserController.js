@@ -218,6 +218,99 @@ function get_img(req, res){
         res.status(200).sendFile(path.resolve(path_img));
     }
 }
+        
+function editar_config(req,res){
+    let id = req.params['id'];
+    var data = req.body;
+
+    if (req.files){
+        //SI IMAGEN, SI CONTRASEÑA
+        if(data.password){
+                Bcrypt.hash(data.password,null,null,function(err,hash){
+                let imagen_path = req.files.imagen.path;
+                let name = imagen_path.split('\\');
+                let imagen_name = name[2];
+                if(err){
+                    res.status(500).send({
+                        message: 'Error en el servidor.'
+                    });
+                }else{
+                    User.findByIdAndUpdate(id,{
+                        nombre: data.nombre,
+                        password: hash,
+                        imagen: imagen_name,
+                        telefono: data.telefono,
+                        bio: data.bio,
+                        facebook: data.facebook,
+                        twitter: data.twitter,
+                        estado: data.estado
+                    },(err,user_data)=>{
+                        if(user_data){
+                            res.status(200).send({user:user_data});
+                        }
+                    })
+                }
+            })
+        }else{
+            //SI IMAGEN, NO CONTRASEÑA
+                let imagen_path = req.files.imagen.path;
+                let name = imagen_path.split('\\');
+                let imagen_name = name[2];
+                    User.findByIdAndUpdate(id,{
+                        nombre: data.nombre,
+                        imagen: imagen_name,
+                        telefono: data.telefono,
+                        bio: data.bio,
+                        facebook: data.facebook,
+                        twitter: data.twitter,
+                        estado: data.estado
+                    },(err,user_data)=>{
+                        if(user_data){
+                            res.status(200).send({user:user_data});
+                        }
+                    })
+        }
+    }else{
+        //SI CONTRASEÑA, NO IMAGEN
+        if(data.password){
+            Bcrypt.hash(data.password,null,null,function(err,hash){
+                if(err){
+                    res.status(500).send({
+                        message: 'Error en el servidor.'
+                    });
+                }else{
+                    User.findByIdAndUpdate(id,{
+                        nombre: data.nombre,
+                        password: hash,
+                        telefono: data.telefono,
+                        bio: data.bio,
+                        facebook: data.facebook,
+                        twitter: data.twitter,
+                        estado: data.estado
+                    },(err,user_data)=>{
+                        if(user_data){
+                            res.status(200).send({user:user_data});
+                        }
+                    });
+                }
+            })
+        }else{
+            //NO CONTRASEÑA, NO IMAGEN
+                    User.findByIdAndUpdate(id,{
+                        nombre: data.nombre,
+                        telefono: data.telefono,
+                        bio: data.bio,
+                        facebook: data.facebook,
+                        twitter: data.twitter,
+                        estado: data.estado
+                    },(err,user_data)=>{
+                        if(user_data){
+                            res.status(200).send({user:user_data});
+                        }
+                    })
+        }
+    }
+}
 
 module.exports = {
     registrar, 
@@ -227,5 +320,6 @@ module.exports = {
     activar_estado,
     desactivar_estado, 
     update_foto, 
-    get_img
+    get_img,
+    editar_config
 }
