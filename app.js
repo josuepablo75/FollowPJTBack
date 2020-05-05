@@ -13,7 +13,11 @@ io.on('connection', function(socket){
     console.log('Usuario conectado')
 }); 
 
-mongose.connect('mongodb://localhost:27017/twitterdb', (err)=> {
+mongose.connect('mongodb://localhost:27017/twitterdb', {
+            useFindAndModify: false , 
+            useUnifiedTopology: true , 
+             useNewUrlParser: true
+        } , (err) => {
     if(err){
         throw err; 
     }else {
