@@ -12,5 +12,6 @@ app.put('/usuario/activar/:id', UserController.activar_estado);
 app.put('/usuario/desactivar/:id', UserController.desactivar_estado);
 app.put('/usuario/editar/imagen/:id', path, UserController.update_foto); 
 app.get('/usuario/img/:img', UserController.get_img);
+app.post('/usuario/editar/:id', UserController.editar_config);
 
 module.exports = app; 
