@@ -4,19 +4,18 @@ var path = require('path');
 
 function send(req,res){
     let data = req.body;
-    console.log(data);
     var message = new Message();
-    console.log(message);
 
     message.de = data.de;
     message.para = data.para;
-    message.msn = data.msn;
-
+    message.msm = data.msm;
+    
     message.save((err,message_save)=>{
         if(err){
             res.status(500).send({
                 message: 'Error en el servidor.'});
         }else{
+            console.log(message_save)
             if(message_save){
                 res.status(200).send({
                     message: message_save
@@ -26,7 +25,7 @@ function send(req,res){
     })
 }
 
-function data_msn(req,res){
+function data_msm(req,res){
     var data = req.body;
     var de = req.params['de'];
     var para= req.params['para'];
@@ -65,5 +64,5 @@ function data_msn(req,res){
 
 module.exports = {
     send,
-    data_msn
+    data_msm
 }
