@@ -5,7 +5,7 @@ var path = multiParty({uploadDir: './uploads/perfiles'})
 
 var app = express.Router()
 
-app.post('/mensaje/enviar',messageController.send)
-app.get('/mensajes/:de/:para',messageController.data_msn)
+api.post('/mensaje/enviar',messageController.send)
+api.get('/mensajes/:de/:para',messageController.data_msm)
 
 module.exports = app
