@@ -2,6 +2,7 @@ var User= require('../models/user');
 var bcrypt = require('bcrypt-nodejs');
 var jwt = require('../helpers/jwt'); 
 var path = require('path'); 
+var userHelper = require('../helpers/userHelper'); 
 
 function registrar(req,res){
     var params = req.body
@@ -312,6 +313,147 @@ function editar_config(req,res){
     }
 }
 
+function seguir_usuario(req, res){
+     let data = req.body;
+     console.log(data);
+
+     let follow = data.follow; 
+     let seguidores = data.seguidores; 
+
+     if (follow && seguidores)
+    { 
+        //SEGUIR A UN USUARIO
+               User.findByIdAndUpdate(seguidores, {
+                  $addToSet: {
+                      follow: follow
+                  }
+               }, (err, user_update) => {
+                   if (err) {
+                       res.status(500).send({
+                           message: 'Error en el servidor'
+                       });
+                   } else {
+                       if (user_update) {
+                           
+                        //SEGUIDORES DE UN USUARIO
+                          User.findByIdAndUpdate(follow, { $addToSet: {
+                                  seguidores: seguidores }
+                          }, (err, user_update) => {
+                              if (err) {
+                                  res.status(500).send({
+                                      message: 'Error en el servidor'
+                                  });
+                              } 
+                          })
+
+                          res.status(200).send({
+                              user: user_update
+                          });
+
+                       } else {
+                           res.status(500).send({
+                               message: 'No se pudo actualizar'
+                           });
+                       }
+                   }
+               })
+    }
+     else
+    {
+       res.status(500).send({
+           message: 'No se puede realizar la accion faltan parametros'
+       });
+    }
+}
+
+function eliminar_follow(req, res) {
+    let data = req.body;
+    console.log(data);
+
+    let follow = data.follow;
+    let seguidores = data.seguidores;
+
+    if (follow && seguidores) {
+        //SEGUIR A UN USUARIO
+        User.findByIdAndUpdate(seguidores, {
+            $pull: {
+                follow: follow
+            }
+        }, (err, user_update) => {
+            if (err) {
+                res.status(500).send({
+                    message: 'Error en el servidor'
+                });
+            } else {
+                if (user_update) {
+
+                    //DEJAR DE SEGUIR A UN USUARIO
+                    User.findByIdAndUpdate(follow, {
+                        $pull: {
+                            seguidores: seguidores
+                        }
+                    }, (err, user_update) => {
+                        if (err) {
+                            res.status(500).send({
+                                message: 'Error en el servidor'
+                            });
+                        }
+                    })
+                    res.status(200).send({
+                        user: user_update
+                    });
+
+                } else {
+                    res.status(500).send({
+                        message: 'No se pudo actualizar'
+                    });
+                }
+            }
+        })
+    } else {
+        res.status(500).send({
+            message: 'No se puede realizar la accion faltan parametros'
+        });
+    }
+}
+
+async function listar_seguidos(req, res){
+    let id = req.params['id'];
+    
+    let userseguido = await User.findById(id, {follow:true}); 
+
+    userHelper.obtener_usuario(userseguido).then(users_follow => {
+        res.status(200).send({
+        users: users_follow
+        });
+    }).catch(err => {
+        res.status(500).send({
+        message: 'Error en el servidor'
+        });
+    });
+}
+
+async function listar_seguidores(req, res) {
+    let id = req.params['id'];
+
+    let userseguido = await User.findById(id, {
+        seguidores: true
+    });
+
+    userHelper.obtener_usuario(userseguido).then(users_follow => {
+        res.status(200).send({
+            users: users_follow
+        });
+    }).catch(err => {
+        res.status(500).send({
+            message: 'Error en el servidor'
+        });
+    });
+}
+
+
+
+
 module.exports = {
     registrar, 
     login, 
@@ -321,5 +463,9 @@ module.exports = {
     desactivar_estado, 
     update_foto, 
     get_img,
-    editar_config
+    editar_config, 
+    seguir_usuario, 
+    eliminar_follow, 
+    listar_seguidos, 
+    listar_seguidores
 }

@@ -10,7 +10,15 @@ var UserSchema = Schema({
     bio: String, 
     facebook: String, 
     twitter: String, 
-    estado: Boolean,
+    estado: Boolean, 
+    follow: [{
+        type: Schema.Types.ObjectId,
+        ref: 'user'
+    }],
+    seguidores: [{
+         type: Schema.Types.ObjectId,
+         ref: 'user'
+    }] 
 });
 
 module.exports = mongoose.model('user', UserSchema); 
