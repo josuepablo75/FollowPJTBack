@@ -223,12 +223,13 @@ function get_img(req, res){
 function editar_config(req,res){
     let id = req.params['id'];
     var data = req.body;
-
-    if (req.files){
+    console.log(req.files)
+    if (req.files.imagen){
         //SI IMAGEN, SI CONTRASEÑA
         if(data.password){
                 Bcrypt.hash(data.password,null,null,function(err,hash){
                 let imagen_path = req.files.imagen.path;
+                
                 let name = imagen_path.split('\\');
                 let imagen_name = name[2];
                 if(err){
