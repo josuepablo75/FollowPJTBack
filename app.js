@@ -14,6 +14,18 @@ io.on('connection',function(socket){
     socket.on('save-message',function(new_msm){
         io.emit('new-message',{message: new_msm})
     })
+
+    socket.on('disconnect', function(){
+        console.log('user disconeccted')
+    })
+
+    socket.on('save-user', function(user){
+        io.emit('new-user',{user:user})
+    })
+
+    socket.on('save-users', function(users){
+        io.emit('new-users',{users})
+    })
 })
 
 //DATABASE CONNECTION
