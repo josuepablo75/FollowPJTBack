@@ -12,7 +12,7 @@ app.put('/usuario/activar/:id', UserController.activar_estado);
 app.put('/usuario/desactivar/:id', UserController.desactivar_estado);
 app.put('/usuario/editar/imagen/:id', path, UserController.update_foto); 
 app.get('/usuario/img/:img', UserController.get_img);
-app.put('/usuario/editar/:id', UserController.editar_config);
+app.put('/usuario/editar/:id', path, UserController.editar_config);
 app.post('/usuario/seguir', UserController.seguir_usuario); 
 app.post('/usuario/dejardeseguir', UserController.eliminar_follow);
 app.get('/usuario/seguidos/:id', UserController.listar_seguidos);

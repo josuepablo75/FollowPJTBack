@@ -223,11 +223,12 @@ function get_img(req, res){
 function editar_config(req,res){
     let id = req.params['id'];
     var data = req.body;
-    console.log(req.files)
-    if (req.files.imagen){
+    console.log(req.files);
+    console.log(data);
+    if (req.files){
         //SI IMAGEN, SI CONTRASEÑA
         if(data.password){
-                Bcrypt.hash(data.password,null,null,function(err,hash){
+                bcrypt.hash(data.password, null, null, function (err, hash) {
                 let imagen_path = req.files.imagen.path;
                 
                 let name = imagen_path.split('\\');
@@ -275,7 +276,7 @@ function editar_config(req,res){
     }else{
         //SI CONTRASEÑA, NO IMAGEN
         if(data.password){
-            Bcrypt.hash(data.password,null,null,function(err,hash){
+            bcrypt  .hash(data.password, null, null, function (err, hash) {
                 if(err){
                     res.status(500).send({
                         message: 'Error en el servidor.'
