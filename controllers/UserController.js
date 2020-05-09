@@ -208,7 +208,6 @@ function update_foto(req, res){
 
 function get_img(req, res){
     var img = req.params['img']; 
-    console.log('aca: ' + img)
     if(img != "null"){
         var path_img = './uploads/perfiles/'+img; 
         console.log(req.params)
