@@ -317,7 +317,6 @@ function editar_config(req,res){
 function seguir_usuario(req, res){
      let data = req.body;
      console.log(data);
-
      let follow = data.follow; 
      let seguidores = data.seguidores; 
 
