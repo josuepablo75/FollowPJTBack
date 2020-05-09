@@ -17,6 +17,7 @@ app.post('/usuario/seguir', UserController.seguir_usuario);
 app.post('/usuario/dejardeseguir', UserController.eliminar_follow);
 app.get('/usuario/seguidos/:id', UserController.listar_seguidos);
 app.get('/usuario/seguidores/:id', UserController.listar_seguidores);
-
+app.get('/usuario/count_seguidos/:id', UserController.count_seguidos);
+app.get('/usuario/count_seguidores/:id', UserController.count_seguidores);
 
 module.exports = app; 

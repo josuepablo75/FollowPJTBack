@@ -8,5 +8,6 @@ app.put('/tweet/editar/:id', tweetsController.editar_publicacion);
 app.post('/tweet/eliminar/:id', tweetsController.eliminar_publicacion);
 app.get('/tweet/get_tweets/:id', tweetsController.get_tweets);
 app.get('/tweet/tweets_seguidos/:id', tweetsController.get_tweets_seguidos);
+app.get('/tweet/tweets_seguidos_2/:id', tweetsController.get_tweets_seg);
 
 module.exports = app
