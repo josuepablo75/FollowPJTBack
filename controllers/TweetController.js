@@ -3,20 +3,26 @@ var User = require('../models/user');
 
 var path = require('path');
 
-function publicar(req, res) {
+async function publicar(req, res) {
 
     let data = req.body;
     var tweet = new Tweets();
 
+    console.log(data);
     tweet.texto = data.texto;
     tweet.user = data.user;
 
     if ( data.texto) {
 
-        tweet.save((err, tweet) => {
+        tweet.save(async (err, tweet) => {
             if (tweet) {
+
+                 let tweets = await Tweets.findById(
+                     tweet.id
+                 ).populate("user");
+
                 res.status(200).send({
-                    tweet: tweet
+                    tweet: tweets
                 });
             } else {
                 res.status(404).send({
@@ -87,26 +93,26 @@ function eliminar_publicacion(req, res) {
     
 }
 
-function get_tweets(req, res) {
+async function get_tweets(req, res) {
     let id = req.params['id'];
 
-    Tweets.find({user: id}, (err, tweets) => {
-        if (err) {
-            res.status(500).send({
-                message: 'Error en el servidor'
-            });
-        } else {
-            if (tweets) {
-                res.status(200).send({
-                    tweets: tweets
-                });
-            } else {
-                res.status(404).send({
-                    message: 'No existe un usuario con ese id'
-                });
-            }
-        }
-    })
+         let tweets = await Tweets.find({user: id
+         }). limit(3).sort({
+             createAt: -1
+         }).populate("user");
+
+
+         //console.log(tweets);
+         if (tweets) {
+             res.status(200).send({
+                 tweets: tweets
+             });
+         } else {
+             res.status(404).send({
+                 message: 'No existen publicaciones'
+             });
+         }
+        
 }
 
 async function get_tweets_seguidos(req, res){
@@ -148,12 +154,54 @@ async function get_tweets_seguidos(req, res){
                 })
 }
 
+async function get_tweets_seg(req, res) {
+    let id = req.params['id'];
+
+    let userseguido = await User.findById(id, {
+        follow: true
+    });
+    var array_users = [];
+    try {
+        array_users = userseguido.follow;
+    } catch (error) {
+
+    }
+
+    array_users.push(id);
+
+    let tweets = await Tweets.find({
+        "user": {
+            $in: array_users
+
+        }
+    }).sort({
+        createAt:-1
+    }).populate("user");
+
+    
+    //console.log(tweets);
+    if(tweets)
+    {
+        res.status(200).send({
+            tweets: tweets
+        });
+    }
+    else
+    {
+        res.status(404).send({
+            message: 'No existen publicaciones'
+        });
+    }
+ 
+}
+
 
 module.exports = {
     publicar, 
     editar_publicacion, 
     eliminar_publicacion, 
     get_tweets, 
-    get_tweets_seguidos
+    get_tweets_seguidos, 
+    get_tweets_seg
 
 }

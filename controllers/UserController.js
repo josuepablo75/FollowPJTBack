@@ -454,6 +454,43 @@ async function listar_seguidores(req, res) {
 }
 
 
+async function count_seguidos(req, res) {
+    let id = req.params['id'];
+    var cont = 0; 
+
+    let userseguido = await User.findById(id, {
+        follow: true
+    });
+
+    userHelper.count_follow(userseguido).then(count => {
+        res.status(200).send({
+            follows: count
+        });
+    }).catch(err => {
+       res.status(500).send({
+           message: 'Error en el servidor'
+       });
+    });
+}
+
+async function count_seguidores(req, res) {
+    let id = req.params['id'];
+    var cont = 0;
+
+    let userseguido = await User.findById(id, {
+        seguidores: true
+    });
+
+    userHelper.count_seguidores(userseguido).then(count => {
+        res.status(200).send({
+            seguidores: count
+        });
+    }).catch(err => {
+       res.status(500).send({
+           message: 'Error en el servidor'
+       });
+    });
+}
 
 
 module.exports = {
@@ -469,5 +506,7 @@ module.exports = {
     seguir_usuario, 
     eliminar_follow, 
     listar_seguidos, 
-    listar_seguidores
+    listar_seguidores, 
+    count_seguidos, 
+    count_seguidores
 }
