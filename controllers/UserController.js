@@ -208,9 +208,10 @@ function update_foto(req, res){
 
 function get_img(req, res){
     var img = req.params['img']; 
-
+    console.log('aca: ' + img)
     if(img != "null"){
         var path_img = './uploads/perfiles/'+img; 
+        console.log(req.params)
         res.status(200).sendFile(path.resolve(path_img)); 
     }
     else
@@ -223,9 +224,7 @@ function get_img(req, res){
 function editar_config(req,res){
     let id = req.params['id'];
     var data = req.body;
-    console.log(req.files);
-    console.log(data);
-    if (req.files){
+    if (req.files.imagen){
         //SI IMAGEN, SI CONTRASEÑA
         if(data.password){
                 bcrypt.hash(data.password, null, null, function (err, hash) {
@@ -259,6 +258,7 @@ function editar_config(req,res){
                 let imagen_path = req.files.imagen.path;
                 let name = imagen_path.split('\\');
                 let imagen_name = name[2];
+                console.log(imagen_path)
                     User.findByIdAndUpdate(id,{
                         nombre: data.nombre,
                         imagen: imagen_name,
